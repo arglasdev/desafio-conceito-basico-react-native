@@ -22,7 +22,7 @@ export default function App() {
 
   }, []);
 
-  async function loadRepo(){
+  async function loadRepo() {
 
     const response = await api.get('repositories');
 
@@ -34,7 +34,16 @@ export default function App() {
 
     await api.post(`repositories/${id}/like`);
 
-    loadRepo();    
+    const newRepos = repos.map(r => {
+      if (r.id !== id) {
+        return r;
+      } else {
+        r.likes += 1;
+        return r;
+      }
+    });
+
+    setRepo(newRepos);
   }
 
   return (
@@ -67,16 +76,16 @@ export default function App() {
 
               <View style={styles.likesContainer}>
                 <Text
-                  style={styles.likeText}                  
+                  style={styles.likeText}
                   testID={`repository-likes-${repo.id}`}
                 >
-                  { repo.likes > 1 ? `${repo.likes} curtidas` : `${repo.likes} curtida`} 
+                  {repo.likes > 1 ? `${repo.likes} curtidas` : `${repo.likes} curtida`}
                 </Text>
               </View>
 
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => handleLikeRepository(repo.id)}                
+                onPress={() => handleLikeRepository(repo.id)}
                 testID={`like-button-${repo.id}`}
               >
                 <Text style={styles.buttonText}>Curtir</Text>
